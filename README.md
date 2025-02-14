@@ -38,8 +38,24 @@ npm run dev
 ```
 5. Open your browser and start chatting! 🎉
 
+## 🛡 Authentication & Security
+- JWT-based authentication is implemented.
+- Protected routes require authentication.
+- Request validation ensures secure input handling.
+
+## Authentication
+| Method | Endpoint   | Description |
+|--------|-----------|-------------|
+| **POST**  | `/signup` | Register a new user |
+| **POST**  | `/login`  | Authenticate a user |
+
+---
+
 ## Future Improvements
 
 - 🚀 Typing indicators for a better user experience
 - 🔔 Real-time notifications for new messages
 - 📱 Responsive UI for mobile support
+
+## 🎯 Contributing
+- Contributions are welcome! If you find a bug or have a feature request, please create an issue or submit a pull request.
