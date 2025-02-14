@@ -17,26 +17,26 @@ A real-time chat application built with Node.js, Express.js, Socket.io, and Supa
  
 ## Setup & Installation
 
-- Clone the repository:
+1. Clone the repository:
 ```
 git clone https://github.com/alimagdye/Real-Time-Chat-Application.git
 cd real-time-chat-app
 ```
-- Install dependencies:
+2. Install dependencies:
 ```
 npm install
 ```
-- Set up Supabase and add your credentials in .env:
+3. Set up Supabase and add your credentials in .env:
 ```
 SUPABASE_URL=your_supabase_project_url
 SUPABASE_ANON_KEY=your_supabase_key
 JWT_SECRET=your_jwt_secret
 ```
-- Start the server:
+4. Start the server:
 ```
 npm run dev
 ```
-- Open your browser and start chatting! 🎉
+5. Open your browser and start chatting! 🎉
 
 ## Future Improvements
 
