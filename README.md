@@ -34,7 +34,7 @@ JWT_SECRET=your_jwt_secret
 ```
 - Start the server:
 ```
-npm start
+npm run dev
 ```
 - Open your browser and start chatting! 🎉
 
