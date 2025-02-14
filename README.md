@@ -19,7 +19,7 @@ A real-time chat application built with Node.js, Express.js, Socket.io, and Supa
 
 - Clone the repository:
 ```
-git clone https://github.com/your-username/real-time-chat-app.git
+git clone https://github.com/alimagdye/Real-Time-Chat-Application.git
 cd real-time-chat-app
 ```
 - Install dependencies:
