@@ -53,6 +53,7 @@ npm run dev
 
 ## Future Improvements
 
+- 👨‍👩‍👧‍👦 groups chat for many users to chat together
 - 🚀 Typing indicators for a better user experience
 - 🔔 Real-time notifications for new messages
 - 📱 Responsive UI for mobile support
