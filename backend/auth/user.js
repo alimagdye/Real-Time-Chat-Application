@@ -1,5 +1,5 @@
-import { createJWTtoken, hashPassword, comparePasswords } from "auth.js";
-import { supabase } from "../db.js"; // Import the Supabase client
+import { createJWTtoken, hashPassword, comparePasswords } from "./auth.js";
+import { supabase } from "../config/db.js"; // Import the Supabase client
 
 export const createUser = async function (req, res) {
   const { username, email, password } = req.body;

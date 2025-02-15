@@ -1,16 +1,24 @@
 import { createServer } from "http";
 import { Server } from "socket.io";
 import express from "express";
-import { globalMiddleware, errorHandler } from "./middleware/globalMiddleware";
-import { createUser, loginUser } from "./auth/user";
-import { handleInputErrors } from "./middleware/validation";
-import { protect } from "./auth/auth";
-import { sendMessage, getMessages } from "./chat/chat";
+import {
+  globalMiddleware,
+  errorHandler,
+} from "./middleware/globalMiddleware.js";
+import { createUser, loginUser } from "./auth/user.js";
+import { handleInputErrors } from "./middleware/validation.js";
+import { protect } from "./auth/auth.js";
+import { sendMessage, getMessages } from "./chat/chat.js";
 import { body } from "express-validator";
+import jwt from "jsonwebtoken";
+import { supabase } from "./config/db.js";
 
-const app = express(); // create Express app
+const app = express(); // Create Express app
 
-app.use(globalMiddleware); // apply global middleware
+app.use(globalMiddleware); // Apply global middleware
+
+// ✅ Serve Static Files (index.html for login & chat.html for chat)
+app.use(express.static("./frontend"));
 
 app.post(
   "/signup",
@@ -23,7 +31,7 @@ app.post(
   ],
   handleInputErrors,
   createUser
-); // create a user and save it to the database and return a JWT token
+); // Register a user
 
 app.post(
   "/login",
@@ -35,55 +43,53 @@ app.post(
   ],
   handleInputErrors,
   loginUser
-); // login a user and return a JWT token
-
-// Protect messaging routes with authentication
-app.use("/chat", protect, express.static("./frontend"));
-
-// API Endpoints for Messages (Protected)
-app.post("/messages", protect, sendMessage);
-app.get("/messages/:username", protect, getMessages);
+); // Login user
 
 const server = createServer(app);
 const io = new Server(server, { cors: { origin: "*" } });
 
-io.on("connection", async (socket) => {
-  console.log(`New user connected: ${socket.id}`);
+// ✅ Authenticate WebSocket connections
+io.use((socket, next) => {
+  const token = socket.handshake.auth.token;
+  if (!token || !token.startsWith("Bearer ")) {
+    return next(new Error("Authentication required"));
+  }
 
-  // Fetch previous messages when requested
-  socket.on("msgs:get", async ({ receiverUsername, token }) => {
-    const req = {
-      user: protect(token),
-      params: { username: receiverUsername },
-    };
-    const res = {
-      status: (code) => ({
-        json: (data) => socket.emit("msgs:get", data),
-      }),
-    };
+  try {
+    const decoded = jwt.verify(token.split(" ")[1], process.env.JWT_SECRET);
+    socket.user = decoded; // Attach user to socket
+    next();
+  } catch (error) {
+    next(new Error("Invalid or expired token"));
+  }
+});
 
-    await getMessages(req, res);
+// ✅ WebSocket Event Handlers
+io.on("connection", (socket) => {
+  console.log(`✅ User connected: ${socket.user.username}`);
+
+  // ✅ Handle Sending Messages
+  socket.on("msg:post", (data) => {
+    console.log("📨 Server received msg:post:", data);
+    sendMessage(socket, data);
   });
 
-  // Handle sending messages
-  socket.on("msgs:post", async ({ receiverUsername, text, token }) => {
-    const req = { user: protect(token), body: { receiverUsername, text } };
-    const res = {
-      status: (code) => ({
-        json: (data) => {
-          if (code === 201) io.emit("msgs:get", data);
-          else socket.emit("error", data);
-        },
-      }),
-    };
+  // ✅ Handle Fetching Messages
+  socket.on("msg:get", (receiverUsername) => {
+    console.log(`📡 Server received msg:get for ${receiverUsername}`);
+    getMessages(socket, receiverUsername);
+  });
 
-    await sendMessage(req, res);
+  // ✅ Handle Disconnection
+  socket.on("disconnect", () => {
+    console.log(`❌ User disconnected: ${socket.user.username}`);
   });
 });
 
+// ✅ Global Error Handling Middleware
 app.use(errorHandler);
 
 const port = process.env.PORT || 3000;
 server.listen(port, () =>
-  console.log(`Server running at http://localhost:${port}`)
+  console.log(`🚀 Server running at http://localhost:${port}`)
 );
