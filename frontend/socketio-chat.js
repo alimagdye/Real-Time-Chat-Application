@@ -12,8 +12,6 @@ if (!token || !user) {
   window.location.href = "index.html"; // Redirect to login if not authenticated
 }
 
-let receiverUsername = null; // Store selected receiver
-
 // ✅ Connect to WebSocket with authentication
 const socket = io("http://localhost:3000", {
   auth: {
@@ -32,10 +30,17 @@ socket.on("disconnect", () => {
   console.warn("⚠️ Disconnected from server");
 });
 
-// ✅ Handle Receiver Selection
+socket.on("msg:get", (data) => {
+  // Listen for messages
+  console.log("📩 Messages received:", data);
+  const message = data.message[0];
+  renderMessage(message.sender_username, message.text, message.created_at);
+});
+
+// **✅** Handle Receiver Selection
 selectReceiverForm.addEventListener("submit", function (e) {
   e.preventDefault();
-  receiverUsername = document.getElementById("receiver").value.trim();
+  const receiverUsername = document.getElementById("receiver").value.trim();
 
   if (!receiverUsername) {
     console.warn("⚠️ Please enter a receiver username.");
@@ -49,16 +54,20 @@ selectReceiverForm.addEventListener("submit", function (e) {
   messageContainer.style.display = "block";
 });
 
-// ✅ Fetch and display messages when a user selects a conversation
+// **✅** Fetch and display messages when a user selects a conversation
 function loadMessages(receiver) {
-  socket.emit("msg:get", receiver);
+  socket.emit("msg:load", receiver); // Request messages for the selected receiver
 
-  socket.off("msg:get"); // Remove previous listeners to prevent duplication
-  socket.on("msg:get", ({ messages }) => {
+  socket.on("msg:load", ({ messages }) => {
+    // Listen for messages
     console.log("📩 Messages received:", messages);
     msgs.innerHTML = ""; // Clear previous messages
-    messages.forEach(({ sender_id, text }) => {
-      renderMessage(sender_id === user.id ? user.username : receiver, text);
+    messages.forEach(({ sender_id, text, created_at }) => {
+      renderMessage(
+        sender_id === user.id ? user.username : receiver,
+        text,
+        created_at
+      );
     });
   });
 
@@ -67,42 +76,37 @@ function loadMessages(receiver) {
   });
 }
 
-// ✅ Send a new message
+// **✅** Send a new message
 chatForm.addEventListener("submit", function (e) {
   e.preventDefault();
   const text = document.getElementById("text").value.trim();
-
+  const receiverUsername = document.getElementById("receiver").value.trim();
   if (!receiverUsername || !text) {
     console.warn("⚠️ Message not sent: Missing receiver or text");
     return;
   }
 
   console.log("📨 Sending message:", { receiverUsername, text });
-  socket.emit("msg:post", { receiverUsername, text });
-
-  // ✅ Optimistically render the sent message in the UI
-  renderMessage(user.username, text);
+  socket.emit("msg:post", { receiverUsername, text }); // ** **Send message to the server
 
   document.getElementById("text").value = ""; // Clear input
 });
 
-// ✅ Receive and display new messages in real-time
-socket.on("msg:new", (newMessage) => {
-  console.log("📩 New Message Received:", newMessage);
-
-  // ✅ Call `renderMessage()` to ensure messages appear in the correct place
-  renderMessage(newMessage.senderUsername, newMessage.text);
-});
-
-
-
 // ✅ Render a single message in the chat UI
-function renderMessage(sender, text) {
+function renderMessage(sender, text, created_at) {
   const msgElement = document.createElement("li");
   msgElement.classList.add("collection-item");
-  msgElement.innerHTML = `<span class="badge">${sender}</span>${text}`;
-  msgs.appendChild(msgElement);
 
-  // ✅ Auto-scroll to the bottom
-  msgs.scrollTop = msgs.scrollHeight;
+  // ✅ Format the timestamp (HH:MM AM/PM)
+  const time = new Date(created_at).toLocaleTimeString([], {
+    hour: "2-digit",
+    minute: "2-digit",
+    hour12: true, // Display AM/PM format
+  });
+
+  // ✅ Display sender, message text, and time
+  msgElement.innerHTML = `<span class="badge">${sender} | ${time}</span> ${text}`;
+
+  // ✅ Add new message at the top instead of the bottom
+  msgs.prepend(msgElement);
 }

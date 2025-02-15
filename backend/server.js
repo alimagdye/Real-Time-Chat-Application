@@ -68,21 +68,57 @@ io.use((socket, next) => {
 io.on("connection", (socket) => {
   console.log(`✅ User connected: ${socket.user.username}`);
 
-  // ✅ Handle Sending Messages
-  socket.on("msg:post", (data) => {
-    console.log("📨 Server received msg:post:", data);
-    sendMessage(socket, data);
-  });
-
-  // ✅ Handle Fetching Messages
-  socket.on("msg:get", (receiverUsername) => {
-    console.log(`📡 Server received msg:get for ${receiverUsername}`);
-    getMessages(socket, receiverUsername);
-  });
-
   // ✅ Handle Disconnection
   socket.on("disconnect", () => {
     console.log(`❌ User disconnected: ${socket.user.username}`);
+  });
+
+  // **✅** Handle Sending Messages
+  socket.on("msg:post", async (data) => {
+    // receiverUsername is the person receiving the posted message
+    console.log(
+      `📨 Server received msg:post: "${data.text}" to ${data.receiverUsername}`
+    );
+
+    const messageSent = await sendMessage(
+      socket,
+      data.receiverUsername,
+      data.text
+    );
+
+    const receiverSocket = [...io.sockets.sockets.values()].find(
+      (s) => s.user?.username === data.receiverUsername
+    );
+
+    if (receiverSocket) {
+      console.log(`✅ receiver is online. Sending message in real-time.`);
+
+      // send the message to the receiver in real-time if the receiver is online
+      receiverSocket.emit("msg:get", {
+        message: [messageSent],
+      });
+
+      // TODO: make online status green in the UI
+
+      // code for this
+      // const onlineStatus = document.getElementById("online-status");
+      // onlineStatus.style.color = "green";
+      // onlineStatus.innerText = "Online 🟢"
+      // code for this ends;
+
+
+    }
+
+    // send the message to the sender in real-time to update the UI
+    socket.emit("msg:get", {
+      message: [messageSent],
+    });
+  });
+
+  socket.on("msg:load", async (receiverUsername) => {
+    // receiverUsername is the person we type his/her username in the text field and load the chats between him and the logged in user
+    // in msg:get event handler for receiverUsername
+    socket.emit("msg:load", await getMessages(socket, receiverUsername)); // emit msg:get event sending messages to socketio-chat.js after waiting for getMessages to resolve
   });
 });
 
