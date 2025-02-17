@@ -2,73 +2,53 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Chat App</title>
+    <title>Meow Chat</title>
+    <!-- icon -->
+    <link rel="icon" href="cat.png" />
+
+    <!-- styles -->
+    <link rel="stylesheet" href="chat.css" />
     <link
-      href="https://fonts.googleapis.com/icon?family=Material+Icons"
       rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"
     />
-    <link
-      rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css"
-    />
-    <link rel="stylesheet" href="style.css" />
   </head>
   <body>
-    <div id="presence-indicator">Loading 🟡</div>
-    <h1>Chat Application</h1>
-
-    <!-- Select Receiver -->
-    <div class="row page-column">
-      <form id="select-receiver" class="col s12">
-        <div class="row">
-          <div class="input-field col s6">
-            <i class="material-icons prefix">account_circle</i>
-            <input id="receiver" type="text" class="validate" />
-            <label for="receiver">Enter Receiver Username</label>
-          </div>
-          <div class="col s6 btn-box">
-            <button class="btn blue waves-effect waves-light" type="submit">
-              Load Chat
-              <i class="material-icons right">chat</i>
-            </button>
-          </div>
-        </div>
-      </form>
-    </div>
-
-    <!-- Message Input (Hidden Until Receiver is Chosen) -->
-    <div id="message-container" class="row page-column" style="display: none">
-      <form id="chat" class="col s12">
-        <div class="row">
-          <div class="input-field col s9">
-            <i class="material-icons prefix">message</i>
-            <input id="text" type="text" class="validate" />
-            <label for="text">Type a message...</label>
-          </div>
-          <div class="col s3 btn-box">
-            <button
-              class="btn teal lighten-1 waves-effect waves-light"
-              type="submit"
-            >
-              Send
-              <i class="material-icons right">send</i>
-            </button>
-          </div>
-        </div>
-      </form>
-    </div>
-
-    <!-- Chat Messages -->
+    <div id="presence-indicator"></div>
     <div id="chat-container">
-      <ul class="collection page-column" id="msgs"></ul>
+      <!-- Top Bar -->
+      <form id="select-receiver">
+        <div class="top-bar">
+          <button class="back-to-login" type="button">
+            <i class="fa-solid fa-arrow-left"></i>
+          </button>
+          <input type="text" id="receiver" placeholder="Enter username" />
+          <button type="submit" class="search-btn">
+            <i class="fa-solid fa-magnifying-glass"></i>
+          </button>
+        </div>
+      </form>
+
+      <!-- Chat Messages -->
+      <div id="chat-box" class="msgs chat-container">
+        <div class="start-chat">
+          Your messages will appear here once you select a user.
+        </div>
+      </div>
+
+      <!-- Input Section -->
+      <form id="chat">
+        <div class="message-input">
+          <input type="text" placeholder="Type a message..." id="text" disabled />
+          <button class="send-btn" type="submit">
+            <i class="fa-solid fa-paper-plane"></i>
+          </button>
+        </div>
+      </form>
     </div>
 
-    <script
-      src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"
-      crossorigin="anonymous"
-    ></script>
+    <!-- <script src="script.js"></script> -->
     <script
       src="https://cdn.socket.io/4.1.2/socket.io.min.js"
       crossorigin="anonymous"

@@ -7,11 +7,10 @@ import {
 } from "./middleware/globalMiddleware.js";
 import { createUser, loginUser } from "./auth/user.js";
 import { handleInputErrors } from "./middleware/validation.js";
-import { protect } from "./auth/auth.js";
 import { sendMessage, getMessages } from "./chat/chat.js";
 import { body } from "express-validator";
 import jwt from "jsonwebtoken";
-import { supabase } from "./config/db.js";
+import open from "open";
 
 const app = express(); // Create Express app
 
@@ -57,16 +56,60 @@ io.use((socket, next) => {
 
   try {
     const decoded = jwt.verify(token.split(" ")[1], process.env.JWT_SECRET);
-    socket.user = decoded; // Attach user to socket
+    socket.user = decoded;
+
+    if (!socket.user) {
+      return next(new Error("Authentication required"));
+    }
+
+    if (Date.now() >= decoded.exp * 1000) {
+      console.warn(`❌ Token expired for user ${decoded.username}`);
+      return next(new Error("Token expired. Please log in again."));
+    }
+
     next();
   } catch (error) {
-    next(new Error("Invalid or expired token"));
+    if (error.name === "TokenExpiredError") {
+      console.warn("⚠️ Token expired, disconnecting user.");
+      return next(new Error("Token expired"));
+    }
+    return next(new Error("Invalid or expired token"));
   }
 });
 
-// ✅ WebSocket Event Handlers
 io.on("connection", (socket) => {
+  if (!socket.user) {
+    console.log("❌ Unauthorized connection attempt, disconnecting.");
+    socket.disconnect(true);
+    return;
+  }
+
   console.log(`✅ User connected: ${socket.user.username}`);
+
+  socket.on("disconnect", () => {
+    console.log(`❌ User disconnected: ${socket.user.username}`);
+  });
+
+  console.log(`✅ User connected: ${socket.user.username}`);
+
+  // // Check token expiration every 1 minute
+  // const interval = setInterval(() => {
+  //   const now = Math.floor(Date.now() / 1000);
+  //   if (socket.user.exp < now) {
+  //     console.log(
+  //       `❌ Token expired for ${socket.user.username}. Disconnecting.`
+  //     );
+  //     socket.emit("token:expired"); // Notify frontend
+  //     socket.disconnect(true); // Force disconnect
+  //     clearInterval(interval);
+  //   }
+  // }, 60000); // Check every 60 seconds
+
+  // // Clear interval on disconnect
+  // socket.on("disconnect", () => {
+  //   console.log(`❌ User disconnected: ${socket.user.username}`);
+  //   clearInterval(interval);
+  // });
 
   // ✅ Handle Disconnection
   socket.on("disconnect", () => {
@@ -105,8 +148,6 @@ io.on("connection", (socket) => {
       // onlineStatus.style.color = "green";
       // onlineStatus.innerText = "Online 🟢"
       // code for this ends;
-
-
     }
 
     // send the message to the sender in real-time to update the UI
@@ -126,6 +167,7 @@ io.on("connection", (socket) => {
 app.use(errorHandler);
 
 const port = process.env.PORT || 3000;
-server.listen(port, () =>
-  console.log(`🚀 Server running at http://localhost:${port}`)
-);
+server.listen(port, () => {
+  console.log(`🚀 Server running at http://localhost:${port}`);
+  // open("http://localhost:3000");
+});

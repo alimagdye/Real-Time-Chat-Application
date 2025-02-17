@@ -3,38 +3,74 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Login / Signup</title>
-    <style>
-      body {
-        font-family: Arial, sans-serif;
-        text-align: center;
-        margin: 50px;
-      }
-      input {
-        display: block;
-        margin: 10px auto;
-        padding: 10px;
-        width: 80%;
-        max-width: 300px;
-      }
-      button {
-        padding: 10px 20px;
-        cursor: pointer;
-      }
-    </style>
+    <title>Meow Chat</title>
+    <link rel="icon" href="cat.png" />
+    <link rel="stylesheet" href="style.css" />
   </head>
   <body>
-    <h2>Login / Signup</h2>
-    <form id="authForm">
-      <input type="text" id="username" placeholder="Username" required />
-      <input type="email" id="email" placeholder="Email (Only for Signup)" />
-      <input type="password" id="password" placeholder="Password" required />
-      <button type="submit">Login</button>
-      <button type="button" id="toggle">Switch to Signup</button>
-    </form>
+    <div class="container">
+      <div class="image-container"></div>
+      <div class="form-container">
+        <div class="center">
+          <h3>
+            <img
+              src="cat.png"
+              alt="logo"
+              width="21px"
+              height="21px"
+              loading="lazy"
+            />
+            <span class="meow">M</span>eow <span class="meow">C</span>hat App
+          </h3>
+          <h2 id="formTitle">Please log in to your account</h2>
 
-    <p id="message"></p>
+          <p id="formSubtitle">
+            Welcome back! Please sign in using your credentials.
+          </p>
+        </div>
+        <form id="authForm">
+          <label for="username">Username</label>
+          <input
+            type="text"
+            id="username"
+            placeholder="user"
+            pattern="^[a-zA-Z0-9]{3,15}$"
+            title="Username must start with a letter, be 3-16 characters, and contain only letters, numbers, underscores, or dots."
+          />
 
+          <div id="email">
+            <label for="email-field">Email</label>
+            <input
+              type="email"
+              id="email-field"
+              placeholder="name@email.com"
+              pattern="^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$"
+              title="Please enter a valid email"
+            />
+          </div>
+          <label for="password">Password</label>
+          <div class="password-container">
+            <input
+              type="password"
+              id="password"
+              placeholder="••••••••••"
+              pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$"
+              title="Password must be at least 8 characters, with one uppercase, one lowercase, one number, and one special character (@$!%*?&)."
+            />
+            <i class="fa fa-eye-slash" id="togglePassword"></i>
+          </div>
+          <button type="submit" id="signinBtn">Sign in</button>
+        </form>
+        <p class="signup">
+          <span id="signupSpan"> Don't have an account?</span>
+          <a href="#" id="signupBtn">Sign up</a>
+        </p>
+      </div>
+    </div>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"
+    />
     <script src="auth.js"></script>
   </body>
 </html>

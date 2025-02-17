@@ -137,7 +137,7 @@ export const getMessages = async (socket, receiverUsername) => {
 
     // Return messages to the caller
     return {
-      messages,
+      messages, // like { id: 1, text: 'Hello', sender_id: 1, created_at: '2025-10-10T12:00:00.000Z' }
       senderUsername: socket.user.username,
       receiverUsername,
     };
