@@ -42,7 +42,7 @@ if (!token || !user) {
 }
 
 // ✅ Connect to WebSocket with authentication
-const socket = io("http://localhost:3000", {
+const socket = io("https://meow-chat.up.railway.app", {
   auth: {
     token: `Bearer ${token}`,
     user, // ✅ Send user object
