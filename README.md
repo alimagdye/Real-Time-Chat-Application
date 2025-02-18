@@ -56,7 +56,6 @@ npm run dev
 - 👨‍👩‍👧‍👦 groups chat for many users to chat together
 - 🚀 Typing indicators for a better user experience
 - 🔔 Real-time notifications for new messages
-- 📱 Responsive UI for mobile support
 
 ## 🎯 Contributing
 - Contributions are welcome! If you find a bug or have a feature request, please create an issue or submit a pull request.
