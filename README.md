@@ -26,10 +26,10 @@ You can test the app by visiting the following link: [Meow Chat](https://meow-ch
 Use the following account credentials to log in:
 
     Username: user1
-    Password: User@11
+    Password: User@111
 
     Username: user2
-    Password: User@22
+    Password: User@222
 
 Alternatively, you can sign up for a new account directly within the app.
  
