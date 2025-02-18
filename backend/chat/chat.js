@@ -51,21 +51,7 @@ export const sendMessage = async (socket, receiverUsername, text) => {
 
     if (recipientError) throw new Error(recipientError.message);
 
-    // Notify sender and receiver
-    // const newMessage = {
-    //   senderUsername: socket.user.username,
-    //   receiverUsername,
-    //   text,
-    //   created_at: messageData.created_at,
-    // };
-    console.log("📩 Message sent:");
-    console.log({
-      id: messageData.id,
-      created_at: messageData.created_at,
-      text: messageData.text,
-      sender_id: messageData.sender_id,
-      sender_username: socket.user.username,
-    }); // will log: { id: 1, created_at: '2025-10-10T12:00:00.000Z', text: 'Hello', sender_id: 1, sender_username: 'alice' }
+    // will log: { id: 1, created_at: '2025-10-10T12:00:00.000Z', text: 'Hello', sender_id: 1, sender_username: 'alice' }
 
     return {
       id: messageData.id,
@@ -82,10 +68,6 @@ export const sendMessage = async (socket, receiverUsername, text) => {
 
 export const getMessages = async (socket, receiverUsername) => {
   try {
-    console.log(
-      `📡 Fetching messages for conversation with ${receiverUsername}`
-    );
-
     const senderId = socket.user.id;
 
     // ✅ Validate Receiver Username
@@ -108,7 +90,6 @@ export const getMessages = async (socket, receiverUsername) => {
     }
 
     const receiverId = receiverData.id;
-    console.log(`✅ Found receiver ID: ${receiverId}`);
 
     if (receiverId === senderId) {
       console.warn("⚠️ Cannot send messages to yourself");
@@ -132,8 +113,6 @@ export const getMessages = async (socket, receiverUsername) => {
       );
       return socket.emit("error", "Failed to fetch messages");
     }
-
-    console.log("📩 Messages Retrieved:", messages);
 
     // Return messages to the caller
     return {

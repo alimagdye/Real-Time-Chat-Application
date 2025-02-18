@@ -2,7 +2,36 @@ const selectReceiverForm = document.getElementById("select-receiver");
 const chatForm = document.getElementById("chat");
 const msgs = document.querySelector(".msgs");
 const presence = document.getElementById("presence-indicator");
+const modal = document.querySelector(".modal");
+const overlay = document.querySelector(".overlay");
+const errorMessage = document.querySelector(".error-message");
 // const messageContainer = document.getElementById("message-container");
+
+const handleShow = function () {
+  modal.classList.remove("hidden"); // don't put dot
+  overlay.classList.remove("hidden");
+};
+
+const handleClose = function () {
+  modal.classList.add("hidden");
+  overlay.classList.add("hidden");
+};
+
+const displayError = function (message) {
+  handleShow();
+  errorMessage.textContent = message;
+};
+
+// event listeners for the modal
+document.addEventListener("keydown", (event) => {
+  if (event.key === "Escape" && !modal.classList.contains("hidden"))
+    handleClose();
+});
+
+document
+  .querySelector(".close-modal")
+  .addEventListener("click", () => handleClose());
+overlay.addEventListener("click", () => handleClose());
 
 // Ensure the user is authenticated, else redirect to login
 const token = localStorage.getItem("token");
@@ -39,6 +68,7 @@ function isTokenExpired() {
     return Date.now() >= payload.exp * 1000; // Compare current time with expiry
   } catch (error) {
     console.error("Error decoding token:", error);
+    displayError("Error decoding token");
     return true; // Assume expired on error
   }
 }
@@ -48,6 +78,7 @@ setInterval(() => {
     console.warn("❌ Token expired! Logging out...");
     localStorage.removeItem("token");
     localStorage.removeItem("user");
+    alert("Token expired! Logging out...");
     if (socket) socket.disconnect();
     window.location.href = "index.html"; // Redirect to login
   }
@@ -60,7 +91,10 @@ socket.on("connect_error", (err) => {
 });
 
 socket.on("token:expired", () => {
+  localStorage.removeItem("token");
+  localStorage.removeItem("user");
   alert("Your session has expired. Please log in again.");
+  if (socket) socket.disconnect();
   window.location.href = "index.html"; // Redirect to login
 });
 
@@ -81,7 +115,6 @@ document.querySelector(".back-to-login").addEventListener("click", () => {
 
 socket.on("msg:get", (data) => {
   // Listen for messages
-  console.log("📩 Messages received:", data);
   const message = data.message[0];
   renderMessage(
     message.sender_id === user.id ? true : false,
@@ -97,10 +130,10 @@ selectReceiverForm.addEventListener("submit", function (e) {
 
   if (!receiverUsername) {
     console.warn("⚠️ Please enter a receiver username.");
+    displayError("Please enter a receiver username.");
     return;
   }
 
-  console.log("📡 Loading messages for", receiverUsername);
   loadMessages(receiverUsername);
 
   // Show the message input form
@@ -113,7 +146,6 @@ function loadMessages(receiver) {
 
   socket.on("msg:load", ({ messages }) => {
     // Listen for messages
-    console.log("📩 Messages received:", messages);
     msgs.innerHTML = ""; // Clear previous messages
     messages.forEach(({ sender_id, text, created_at }) => {
       renderMessage(sender_id === user.id ? true : false, text, created_at);
@@ -125,6 +157,7 @@ function loadMessages(receiver) {
 
   socket.on("error", (message) => {
     console.error("❌ Error:", message);
+    displayError(message);
   });
 }
 
@@ -138,7 +171,6 @@ chatForm.addEventListener("submit", function (e) {
     return;
   }
 
-  console.log("📨 Sending message:", { receiverUsername, text });
   socket.emit("msg:post", { receiverUsername, text }); // ** **Send message to the server
 
   document.getElementById("text").value = ""; // Clear input

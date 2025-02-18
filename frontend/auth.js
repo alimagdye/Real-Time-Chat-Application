@@ -1,10 +1,12 @@
 "use strict";
 document.addEventListener("DOMContentLoaded", () => {
   const authForm = document.getElementById("authForm");
-  // const message = document.getElementById("message");
 
   const passwordInput = document.getElementById("password");
   const togglePassword = document.getElementById("togglePassword");
+  const modal = document.querySelector(".modal");
+  const overlay = document.querySelector(".overlay");
+  const errorMessage = document.querySelector(".error-message");
   let isLogin = true;
 
   togglePassword.addEventListener("click", () => {
@@ -16,6 +18,32 @@ document.addEventListener("DOMContentLoaded", () => {
       togglePassword.classList.replace("fa-eye", "fa-eye-slash"); // Closed eye
     }
   });
+
+  const handleShow = function () {
+    modal.classList.remove("hidden"); // don't put dot
+    overlay.classList.remove("hidden");
+  };
+
+  const handleClose = function () {
+    modal.classList.add("hidden");
+    overlay.classList.add("hidden");
+  };
+
+  const displayError = function (message) {
+    handleShow();
+    errorMessage.textContent = message;
+  };
+
+  // event listeners for the modal
+  document.addEventListener("keydown", (event) => {
+    if (event.key === "Escape" && !modal.classList.contains("hidden"))
+      handleClose();
+  });
+
+  document
+    .querySelector(".close-modal")
+    .addEventListener("click", () => handleClose());
+  overlay.addEventListener("click", () => handleClose());
 
   document
     .getElementById("signupBtn")
@@ -76,7 +104,43 @@ document.addEventListener("DOMContentLoaded", () => {
     const email = document.getElementById("email-field").value.trim();
     const password = document.getElementById("password").value.trim();
 
-    if (!username || !password || (!isLogin && !email)) {
+    // Regular Expressions for Validation
+    const usernameRegex = /^[a-zA-Z0-9_]{3,15}$/; // 3-15 chars, letters, numbers, underscores only
+    const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/; // Standard email format
+    const passwordRegex =
+      /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+    // At least 8 characters, one uppercase, one lowercase, one number, one special character
+
+    // ✅ Username Validation
+    if (!username) {
+      displayError("Username is required");
+      return;
+    } else if (!usernameRegex.test(username)) {
+      displayError(
+        "Username must be 3-15 characters and contain only letters, numbers, or underscores."
+      );
+      return;
+    }
+
+    // ✅ Email Validation (Only when signing up)
+    if (!isLogin) {
+      if (!email) {
+        displayError("Email is required");
+        return;
+      } else if (!emailRegex.test(email)) {
+        displayError("Invalid email format");
+        return;
+      }
+    }
+
+    // ✅ Password Validation
+    if (!password) {
+      displayError("Password is required");
+      return;
+    } else if (!passwordRegex.test(password)) {
+      displayError(
+        "Password must be at least 8 characters, include an uppercase letter, a lowercase letter, a number, and a special character."
+      );
       return;
     }
 
@@ -100,10 +164,12 @@ document.addEventListener("DOMContentLoaded", () => {
         window.location.href = "chat.html"; // ✅ Redirect on success
       } else {
         // message.innerText = data.message || "Authentication failed.";
+        displayError(data.message || "Authentication failed.");
         console.error("Server Response:", data);
       }
     } catch (error) {
       // message.innerText = "Error connecting to server.";
+      displayError("Error connecting to server.");
       console.error("Auth Error:", error);
     }
   });

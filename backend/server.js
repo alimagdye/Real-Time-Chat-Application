@@ -10,7 +10,6 @@ import { handleInputErrors } from "./middleware/validation.js";
 import { sendMessage, getMessages } from "./chat/chat.js";
 import { body } from "express-validator";
 import jwt from "jsonwebtoken";
-import open from "open";
 
 const app = express(); // Create Express app
 
@@ -92,25 +91,6 @@ io.on("connection", (socket) => {
 
   console.log(`✅ User connected: ${socket.user.username}`);
 
-  // // Check token expiration every 1 minute
-  // const interval = setInterval(() => {
-  //   const now = Math.floor(Date.now() / 1000);
-  //   if (socket.user.exp < now) {
-  //     console.log(
-  //       `❌ Token expired for ${socket.user.username}. Disconnecting.`
-  //     );
-  //     socket.emit("token:expired"); // Notify frontend
-  //     socket.disconnect(true); // Force disconnect
-  //     clearInterval(interval);
-  //   }
-  // }, 60000); // Check every 60 seconds
-
-  // // Clear interval on disconnect
-  // socket.on("disconnect", () => {
-  //   console.log(`❌ User disconnected: ${socket.user.username}`);
-  //   clearInterval(interval);
-  // });
-
   // ✅ Handle Disconnection
   socket.on("disconnect", () => {
     console.log(`❌ User disconnected: ${socket.user.username}`);
@@ -119,9 +99,6 @@ io.on("connection", (socket) => {
   // **✅** Handle Sending Messages
   socket.on("msg:post", async (data) => {
     // receiverUsername is the person receiving the posted message
-    console.log(
-      `📨 Server received msg:post: "${data.text}" to ${data.receiverUsername}`
-    );
 
     const messageSent = await sendMessage(
       socket,
@@ -134,20 +111,12 @@ io.on("connection", (socket) => {
     );
 
     if (receiverSocket) {
-      console.log(`✅ receiver is online. Sending message in real-time.`);
-
       // send the message to the receiver in real-time if the receiver is online
       receiverSocket.emit("msg:get", {
         message: [messageSent],
       });
 
       // TODO: make online status green in the UI
-
-      // code for this
-      // const onlineStatus = document.getElementById("online-status");
-      // onlineStatus.style.color = "green";
-      // onlineStatus.innerText = "Online 🟢"
-      // code for this ends;
     }
 
     // send the message to the sender in real-time to update the UI
@@ -169,5 +138,4 @@ app.use(errorHandler);
 const port = process.env.PORT || 3000;
 server.listen(port, () => {
   console.log(`🚀 Server running at http://localhost:${port}`);
-  // open("http://localhost:3000");
 });

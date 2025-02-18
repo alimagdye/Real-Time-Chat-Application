@@ -35,6 +35,10 @@ body {
   margin: 20px;
 }
 
+#text:disabled {
+  cursor: not-allowed;
+}
+
 /* Top Bar */
 .top-bar {
   display: flex;
@@ -186,6 +190,104 @@ body {
 .send-btn i {
   font-size: 18px;
   color: black;
+}
+
+.hidden {
+  display: none;
+}
+
+.modal h1 {
+  font-size: 2.5rem;
+  color: #6620d1;
+  text-align: center;
+}
+
+.modal .error-message {
+  font-size: 1.5rem;
+  color: #6620d1;
+  text-align: center;
+}
+
+.close-modal {
+  position: absolute;
+  top: 0;
+  right: 1rem;
+  font-size: 3rem;
+  color: var(--font-color);
+  cursor: pointer;
+  border: none;
+  background: none;
+  z-index: 5;
+  box-sizing: border-box;
+}
+
+.modal {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 90%;
+  max-width: 1000px;
+  height: fit-content;
+  background-color: #f5f5f5;
+  font-size: 1.2rem;
+  padding: 2rem;
+  border-radius: 10px;
+  box-shadow: 0 3rem 5rem rgba(0, 0, 0, 0.3);
+  z-index: 4;
+  overflow-y: auto;
+  box-sizing: border-box;
+}
+
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(3px);
+  z-index: 3;
+  box-sizing: border-box;
+}
+
+.icon {
+  border: solid 0.6rem;
+  border-radius: 50%;
+  height: 100px;
+  width: 100px;
+  margin: 1rem auto;
+  position: relative;
+  color: #6620d1;
+}
+
+.error {
+  display: none;
+  color: #6620d1;
+}
+
+.error .icon {
+  border-color: #6620d1;
+}
+
+.cross-icon::before,
+.cross-icon::after {
+  content: "";
+  position: absolute;
+  top: 0.6rem;
+  left: 2.3rem;
+  border-radius: 0.5rem;
+  width: 0.6rem;
+  height: 4rem;
+  background-color: #6620d1;
+}
+
+.cross-icon::before {
+  transform: rotate(45deg);
+}
+
+.cross-icon::after {
+  transform: rotate(-45deg);
 }
 
 @media screen and (max-width: 1000px) {
