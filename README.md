@@ -18,9 +18,9 @@ A real-time chat application built with Node.js, Express.js, Socket.io, and Supa
 ## 🚀 Deployment
 - The frontend is hosted on Netlify
 - The backend is deployed on Railway, handling authentication and WebSocket connections.
+- Database is hosted on Supabase
 
 ## Testing the App
-
 You can test the app by visiting the following link: [Meow Chat](https://meow-chat.netlify.app/index.html).
 
 Use the following account credentials to log in:
