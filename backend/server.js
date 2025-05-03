@@ -15,7 +15,7 @@ const app = express(); // Create Express app
 
 app.use(globalMiddleware); // Apply global middleware
 
-// ✅ Serve Static Files (index.html for login & chat.html for chat)
+// Serve Static Files (index.html for login & chat.html for chat)
 app.use(express.static("./frontend"));
 
 app.post(
@@ -46,7 +46,7 @@ app.post(
 const server = createServer(app);
 const io = new Server(server, { cors: { origin: "*" } });
 
-// ✅ Authenticate WebSocket connections
+// Authenticate WebSocket connections
 io.use((socket, next) => {
   const token = socket.handshake.auth.token;
   if (!token || !token.startsWith("Bearer ")) {
