@@ -69,6 +69,9 @@ npm run dev
 
 ---
 
+## Comprehensive Explaination
+- for a comprehensive explaination about the project visit [the application deep-wiki](https://deepwiki.com/alimagdye/Real-Time-Chat-Application).
+
 ## Future Improvements
 
 - 👨‍👩‍👧‍👦 groups chat for many users to chat together
