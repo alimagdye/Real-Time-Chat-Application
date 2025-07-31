@@ -91,11 +91,6 @@ io.on("connection", (socket) => {
 
   console.log(`✅ User connected: ${socket.user.username}`);
 
-  // ✅ Handle Disconnection
-  socket.on("disconnect", () => {
-    console.log(`❌ User disconnected: ${socket.user.username}`);
-  });
-
   // **✅** Handle Sending Messages
   socket.on("msg:post", async (data) => {
     // receiverUsername is the person receiving the posted message
