@@ -57,8 +57,57 @@ npm run dev
 ```
 5. Open your browser and start chatting! 🎉
 
-## Database Schema
-<img width="1364" height="638" alt="image" src="https://github.com/user-attachments/assets/50d22a24-12ca-4997-9560-53965cf15c68" />*Screenshot of the database tables.*
+## 🗄️ Database Schema
+
+This app uses a relational structure to manage users and their messages. Here’s an overview of the database tables:
+
+### **Tables**
+
+#### `users`
+
+Stores registered user credentials.
+
+| Field      | Type   | Description          |
+| ---------- | ------ | -------------------- |
+| `id`       | `uuid` | Primary key          |
+| `username` | `text` | Unique username      |
+| `email`    | `text` | User's email address |
+| `password` | `text` | Hashed password      |
+
+---
+
+#### `messages`
+
+Stores messages sent by users.
+
+| Field        | Type          | Description                        |
+| ------------ | ------------- | ---------------------------------- |
+| `id`         | `uuid`        | Primary key                        |
+| `text`       | `text`        | Message content                    |
+| `sender_id`  | `uuid`        | Foreign key referencing `users.id` |
+| `created_at` | `timestamptz` | Timestamp of when message was sent |
+
+---
+
+#### `message_recipients`
+
+Joins messages to their recipients (supports 1-to-1 messaging and can support group chat in the future).
+
+| Field         | Type   | Description                           |
+| ------------- | ------ | ------------------------------------- |
+| `message_id`  | `uuid` | Foreign key referencing `messages.id` |
+| `receiver_id` | `uuid` | Foreign key referencing `users.id`    |
+
+---
+
+### 💡 Relationships
+
+* A **user** can **send many messages**.
+* A **message** can have **one or more recipients** (extensible to group chat).
+* A **user** can **receive many messages**.
+
+---
+<img width="1364" height="638" alt="image" src="https://github.com/user-attachments/assets/50d22a24-12ca-4997-9560-53965cf15c68" />*Screenshot of the database Entity Relationship Diagram.*
 
 ## 🛡 Authentication & Security
 - JWT-based authentication is implemented.
