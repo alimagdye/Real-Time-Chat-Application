@@ -11,7 +11,7 @@ A real-time chat application built with Node.js, Express.js, Socket.io, and Supa
   
 ## Technologies Used
 - Backend: Node.js, Express.js, Socket.io
-- Database: Supabase (PostgreSQL)
+- Database: Supabase client (PostgreSQL)
 - Authentication: JWT, Middleware Protection
 - Architecture: WebSockets, Event-driven Communication
 
@@ -55,6 +55,9 @@ JWT_SECRET=your_jwt_secret
 npm run dev
 ```
 5. Open your browser and start chatting! 🎉
+
+## DataBase Schema
+<img width="1364" height="638" alt="image" src="https://github.com/user-attachments/assets/50d22a24-12ca-4997-9560-53965cf15c68" />*Screenshot of the database tables.*
 
 ## 🛡 Authentication & Security
 - JWT-based authentication is implemented.
