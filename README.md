@@ -46,9 +46,10 @@ npm install
 ```
 3. Set up Supabase and add your credentials in .env:
 ```
-SUPABASE_URL=your_supabase_project_url
-SUPABASE_ANON_KEY=your_supabase_key
 JWT_SECRET=your_jwt_secret
+JWT_EXPIRES_IN=your_jwt_expiration_time
+SUPABASE_URL=your_supabase_project_url
+SUPABASE_KEY=your_supabase_key
 ```
 4. Start the server:
 ```
@@ -69,6 +70,15 @@ npm run dev
 |--------|-----------|-------------|
 | **POST**  | `/signup` | Register a new user |
 | **POST**  | `/login`  | Authenticate a user |
+
+---
+
+## 💬 WebSocket Events (Socket.IO)
+| Event  | Description |
+|--------|-------------|
+| **msg:post**  | Send a message to another user |
+| **msg:get**   | Receive a message (automatically sent back to both sender & receiver on msg:post) |
+| **msg:load**  | Load chat history with another user |
 
 ---
 
