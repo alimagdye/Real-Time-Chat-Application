@@ -56,7 +56,7 @@ npm run dev
 ```
 5. Open your browser and start chatting! 🎉
 
-## DataBase Schema
+## Database Schema
 <img width="1364" height="638" alt="image" src="https://github.com/user-attachments/assets/50d22a24-12ca-4997-9560-53965cf15c68" />*Screenshot of the database tables.*
 
 ## 🛡 Authentication & Security
