@@ -57,6 +57,16 @@ npm run dev
 ```
 5. Open your browser and start chatting! 🎉
 
+## Screenshots
+- ![1739836617230](https://github.com/user-attachments/assets/1063f27d-a1ba-499d-889d-03d8c330e107)**Screenshot of the login page.**
+- ![1739836865838](https://github.com/user-attachments/assets/1e2e7c4e-a8f9-4beb-b896-d3001e7960fa)**Screenshot of the signup page.**
+- ![1741880048707](https://github.com/user-attachments/assets/427b17c1-8fc7-43fe-8573-e673030f9480)
+  <br>**Screenshot of the messaging page.**
+
+
+## Comprehensive Explaination
+- for a comprehensive explaination about the project visit [the application deep-wiki](https://deepwiki.com/alimagdye/Real-Time-Chat-Application).
+
 ## 🗄️ Database Schema
 
 This app uses a relational structure to manage users and their messages. Here’s an overview of the database tables:
@@ -107,7 +117,7 @@ Joins messages to their recipients (supports 1-to-1 messaging and can support gr
 * A **user** can **receive many messages**.
 
 ---
-<img width="1364" height="638" alt="image" src="https://github.com/user-attachments/assets/50d22a24-12ca-4997-9560-53965cf15c68" />*Screenshot of the database Entity Relationship Diagram.*
+<img width="1364" height="638" alt="image" src="https://github.com/user-attachments/assets/50d22a24-12ca-4997-9560-53965cf15c68" />**Screenshot of the database Entity Relationship Diagram.**
 
 ## 🛡 Authentication & Security
 - JWT-based authentication is implemented.
@@ -131,9 +141,6 @@ Joins messages to their recipients (supports 1-to-1 messaging and can support gr
 
 ---
 
-## Comprehensive Explaination
-- for a comprehensive explaination about the project visit [the application deep-wiki](https://deepwiki.com/alimagdye/Real-Time-Chat-Application).
-
 ## Future Improvements
 
 - 👨‍👩‍👧‍👦 groups chat for many users to chat together
@@ -142,3 +149,5 @@ Joins messages to their recipients (supports 1-to-1 messaging and can support gr
 
 ## 🎯 Contributing
 - Contributions are welcome! If you find a bug or have a feature request, please create an issue or submit a pull request.
+- Created by Ali Magdy. Feel free to contact me at alimagdye1@gmail.com for any questions or suggestions.
+
