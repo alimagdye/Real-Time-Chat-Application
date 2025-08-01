@@ -1,13 +1,12 @@
 # Real-Time Chat Application
-A real-time chat application built with Node.js, Express.js, Socket.io, and Supabase, enabling instant messaging with authentication, secure WebSocket communication, and persistent database storage.
+A real-time chat application built with Node.js, Express.js, Socket.io, and Supabase, enabling instant messaging with JWT authentication, secure WebSocket communication, and persistent database storage.
 
 ## Features
 -  Real-time messaging using WebSockets for instant updates
 -  User authentication with JWT-protected login/signup
--  Secure WebSocket connections with authentication middleware
+-  Secure WebSocket (Socket.io) connections with authentication middleware
 -  Supabase as the database for storing messages and user data
 -  Optimized relational database schema for efficient message retrieval
--  Event-driven architecture for smooth two-way communication
   
 ## Technologies Used
 - Backend: Node.js, Express.js, Socket.io
